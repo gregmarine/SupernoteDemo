@@ -4,8 +4,13 @@ Proof-of-concept Android app proving we can tap the **Ratta Supernote** firmware
 stylus digitizer, capture stroke data, persist it, and re-render it — the groundwork for
 Supernote support in [Notesprout](../Notesprout).
 
-Validated on a **Supernote Nomad** (Android 11 / SDK 30). The same firmware is used on
-the Manta, so it's expected to work there unchanged.
+Validated on a **Supernote Nomad** and a **Supernote Manta** (Android 11 / SDK 30), which
+share the same firmware.
+
+Based on [`plateaukao/supernote_draw`](https://github.com/plateaukao/supernote_draw) and
+the accompanying KOReader `supernote_ink.lua` plugin by Daniel Kao — this project ports
+that work to a standalone Android app. Credit for the original firmware-binder reverse
+engineering goes to that project.
 
 ## What it proves
 
@@ -32,10 +37,6 @@ the Manta, so it's expected to work there unchanged.
 | Save to JSON | ✅ `note.json` written with per-point x/y/pressure |
 | Kill + relaunch → reload | ✅ strokes re-rendered from JSON |
 | Erase | ✅ stroke removed, count updated live |
-
-**Not yet exercised:** the live firmware overlay ink itself is driven by the physical
-EMR pen hardware and can't be triggered by injected `adb` events — that needs a
-hands-on stylus test on the device.
 
 ## Architecture
 
@@ -72,7 +73,6 @@ adb -s <SUPERNOTE_SERIAL> install -r app/build/outputs/apk/debug/app-debug.apk
 
 ## Follow-ups / known gaps
 
-- Live firmware-overlay ink needs a hands-on pen test on the device.
 - EMR `size` → stroke-width mapping is a placeholder (`DrawingView.emrSize`); the real
   ranges live in the upstream `plateaukao/supernote_draw` repo — tune on-device.
 - Single page, single note file. No colors/pen-types UI, undo, or pressure-modulated
